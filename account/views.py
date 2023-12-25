@@ -36,5 +36,5 @@ def UserLogin(request):
             return redirect('/')
            
     
-    return render(request,'Account/login.html')
+    return render(request,'account/login.html')
             
