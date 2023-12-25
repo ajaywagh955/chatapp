@@ -71,39 +71,6 @@ def chat_room(request, room_id):
 
 
 
-# @login_required(login_url="login")
-# def send_request(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username', '')
-
-#         try:
-#             to_user = User.objects.get(username=username)
-#             from_user = request.user
-
-#             # Debug prints
-#             print(f'to_user: {to_user}, from_user: {from_user}')
-
-#             # Check if the request is valid (not to oneself, not already friends)
-#             if to_user != from_user and not Friendship.objects.filter(from_user=from_user, to_user=to_user, is_accepted=True).exists():
-#                 # Check if a pending request already exists
-#                 existing_request = Friendship.objects.filter(from_user=from_user, to_user=to_user, is_accepted=False)
-                
-#                 # Ensure the user is not sending a request to themselves
-#                 if from_user != to_user:
-#                     if not existing_request.exists():
-#                         Friendship.objects.create(from_user=from_user, to_user=to_user)
-#                         return JsonResponse({'message': 'Friend request sent successfully!'})
-#                     else:
-#                         return JsonResponse({'message': 'Friend request already sent.'})
-#                 else:
-#                     return JsonResponse({'message': 'You cannot send a friend request to yourself.'})
-#             else:
-#                 return JsonResponse({'message': 'Invalid friend request.'})
-
-#         except User.DoesNotExist:
-#             return JsonResponse({'message': 'User does not exist.'})
-
-#     return JsonResponse({'message': 'Invalid request method.'})
 
 
 
