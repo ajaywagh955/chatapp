@@ -1,0 +1,265 @@
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  font-size: 100%;
+  background-color: blueviolet;
+  background-attachment: fixed;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+ul,
+li {
+  list-style-type: none;
+}
+
+.wrapper {
+  margin-top: 30px;
+}
+
+.wrapper ul,
+.form-main {
+  margin: 0 auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding-right: 30px;
+}
+
+.wrapper ul li,
+.form-text {
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  background-color: rgba(255, 255, 255, 0.65);
+  position: relative;
+  border-radius: 10px;
+  font: 1em/1.6 "arial";
+  clear: both;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.wrapper ul li:before,
+.wrapper ul li:after {
+  position: absolute;
+  content: "";
+}
+
+.wrapper ul li:before {
+  width: 45px;
+  height: 45px;
+  top: 0;
+  border-radius: 50%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+
+form {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+}
+
+
+.text {
+  width: 1220px;
+}
+
+.send_btn {
+  border-radius: 0 15px 15px 0 !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  border: 0 !important;
+  color: white !important;
+  cursor: pointer;
+}
+
+
+.sendButton {
+  width: 10%;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  margin-top: -10px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.sendButton:hover {
+  background-color: #45a049;
+}
+
+
+@media screen and (max-width: 576px) {
+  .text {
+    width: 300px;
+  }
+
+  .wrapper ul li.sent {
+    margin-right: -10px;
+  }
+
+  .wrapper ul li.received {
+    margin-left: -0px;
+  }
+
+}
+
+
+
+/* Add these styles to your existing CSS */
+
+.wrapper ul li.sent {
+  float: right;
+  color: #fff;
+  background-color: #007BFF;
+}
+
+.wrapper ul li.received {
+  float: left;
+  color: #333;
+  background-color: #f0f0f0;
+}
+
+.wrapper ul li.sent:before {
+  right: auto;
+  left: -15px;
+  border-top-color: transparent;
+  border-left-color: #007BFF;
+}
+
+.wrapper ul li.received:before {
+  right: -15px;
+  left: auto;
+  border-top-color: transparent;
+  border-right-color: #f0f0f0;
+}
+
+
+.navbar {
+  background-color: #333;
+  overflow: hidden;
+  padding: 10px;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.navbar a.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navbar .nav-right {
+  float: right;
+}
+
+.navbar .nav-link {
+  color: #f2f2f2;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.navbar .nav-link:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.navbar-toggler {
+  display: none;
+}
+
+.navbar-toggler-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><path stroke="rgba(255, 255, 255, 1)" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"/></svg>');
+}
+
+@media screen and (max-width: 768px) {
+  .navbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navbar .nav-right {
+    display: none;
+  }
+
+  .navbar-toggler {
+    display: block;
+  }
+}
+
+
+.navbar .logo {
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.navbar .nav-right {
+  display: flex;
+  gap: 10px;
+}
+
+.navbar .nav-right a {
+  color: white;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.navbar .nav-right a:hover {
+  color: #ccc;
+}
+
+.navbar .navbar-toggler {
+  display: none;
+  cursor: pointer;
+}
+
+.navbar .navbar-toggler-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><path stroke="rgba(255, 255, 255, 1)" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"/></svg>');
+}
+
+@media screen and (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navbar .nav-right {
+    display: none;
+  }
+
+  .navbar .navbar-toggler {
+    display: block;
+  }
+}

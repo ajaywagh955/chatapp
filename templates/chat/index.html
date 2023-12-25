@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenchat</title>
+</head>
+<body>
+    <!-- user_rooms.html -->
+
+
+{% block content %}
+<div class="room-list-container">
+<h2>Your Rooms</h2>
+<ul class="room-list">
+  {% for room in rooms %}
+    <li><a href="{% url "chat_room" room.id %}">{{ room.name }}</a></li>
+  {% endfor %}
+</ul>
+</div>
+{% endblock %}
+
+<style>
+  /* Add these styles to your existing CSS */
+
+.room-list-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.room-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.room-list li {
+  margin-bottom: 10px;
+}
+
+.room-list a {
+  display: block;
+  padding: 10px;
+  background-color: #007BFF;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.room-list a:hover {
+  background-color: #0056b3;
+}
+
+</style>
+
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <script src="{% static "chat/js/jquery-3.6.4.min.js" %}"></script>
+    <script>
+        $(document).ready(function () {
+            function getMessages() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/get_messages/',
+                    success: function (data) {
+                        if (data && data.length > 0) {
+                            $('#messages').empty();
+                            for (var i = data.length - 1; i >= 0; i--) {
+                                //   $('#messages').prepend('<p>' + data[i].sender + ' - ' + data[i].content + ' - ' + data[i].timestamp + '</p>');
+                                $('#messages').prepend('<p>' + data[i].sender + ' - ' + data[i].content + '</p>');
+                            }
+                        } else {
+                            console.log('No messages received or invalid data format.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', status, error);
+                    }
+                });
+            }
+            // Call getMessages when the page loads
+            getMessages();
+            // Submit message form
+            $('#messageForm').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '/save_message/',
+                    data: $('#messageForm').serialize(),
+                    success: function (data) {
+                        // Display the new message
+                        $('#messages').prepend('<p>' + data.content + ' - ' + data.timestamp + '</p>');
+                        $('#messageForm')[0].reset();
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+            // Refresh messages every 5 seconds (adjust as needed)
+            setInterval(getMessages, 1000);
+        });          
+    </script>
+</head>
+
+<body>
+    <div id="messages"></div>
+    <form id="messageForm" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Send Message</button>
+    </form>
+</body>
+
+</html>

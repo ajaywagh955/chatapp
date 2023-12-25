@@ -1,0 +1,94 @@
+{% load static %}
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static "chat/css/friendship.css" %}">
+    <script src="{% static "chat/js/jquery-3.6.4.min.js" %}"></script>
+</head>
+
+<body>
+    <div class="content">
+        <h2>Friend Requests</h2>
+        {% if incoming_requests %}
+        <ul> {% for request in incoming_requests %}
+            <li>
+                <div class="friend-request">
+                    <div class="friend-name">{{ request.from_user.username }}</div>
+                    <div class="friend-action">
+                        <a href="{% url 'accept_request' request.id %}">Accept</a>
+                        <a href="{% url 'reject_request' request.id %}">Reject</a>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No friend requests at the moment.</p>
+        {% endif %}
+    </div>
+    <center>
+
+        <div class="container">
+            <h2>Your Friends</h2>
+            {% if friends %}
+            <ul class="friend-list">
+                {% for friend in friends %}
+                <li>{{ friend.username }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="no-friends">You don't have any friends yet.</p>
+            {% endif %}
+        </div>
+
+
+    </center>
+
+    <form id="friendRequestForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Send Friend Request</button>
+    </form>
+
+    <div id="friendRequestResult"></div>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#friendRequestForm').submit(function (e) {
+                e.preventDefault();
+
+                // Get the entered username
+                var username = $('#username').val();
+
+                // Send AJAX request to submit friend request
+                $.ajax({
+                    type: 'POST',
+                    url: '/send_request/',
+                    data: {
+                        'username': username,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        // Display the result
+                        $('#friendRequestResult').text(data.message);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', status, error);
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

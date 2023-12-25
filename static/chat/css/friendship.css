@@ -1,0 +1,131 @@
+#friendRequestResult {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 20px auto;
+}
+
+label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input {
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.content {
+    /* width: 100%; */
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+}
+
+.content ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.content li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.friend-request {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.friend-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.friend-action a {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #337ab7;
+    padding: 5px 10px;
+    border: 1px solid #337ab7;
+    border-radius: 5px;
+}
+
+.friend-action a:hover {
+    color: #23527c;
+    border-color: #23527c;
+}
+
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+h2 {
+    color: #2a2a2a;
+    font-size: 24px;
+}
+
+.friend-list {
+    list-style: none;
+    padding: 0;
+  /*  display: flex; */
+}
+
+.friend-list li {
+    background-color: #eaeaea;
+    padding: 10px 20px;
+    margin: 5px;
+    color: #333;
+    font-size: 18px;
+    flex: 1 0 200px; /* This allows the list items to wrap when the viewport is smaller than 200px */
+    text-align:center;
+    width: 250px;
+}
+
+.no-friends {
+    color: #666;
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+}

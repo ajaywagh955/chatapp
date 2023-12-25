@@ -1,0 +1,95 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Zenchat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+  <link rel="stylesheet" href="{% static "chat/css/style.css" %}">
+</head>
+
+<body>
+  <div class="navbar">
+    <a href="#" class="logo">Zenchat</a>
+    <div class="navbar-toggler">
+      <span class="navbar-toggler-icon"></span>
+    </div>
+    <div class="nav-right">
+      <a href="#" class="nav-link">Link 1</a>
+      <a href="#" class="nav-link">Link 2</a>
+      <a href="#" class="nav-link">Link 3</a>
+    </div>
+  </div>
+
+  <div class="wrapper" id="">
+    <ul id="messages"></ul>
+  </div>
+  <form action="" id="messageForm">
+    <input type="text" name="content" placeholder="Enter your message" class="form-text text" required>
+    <button type="submit" class="sendButton send_btn"><i class="fas fa-location-arrow"></i></button>
+  </form>
+
+  <script src="{% static "chat/js/jquery-3.6.4.min.js" %}"></script>
+
+  <script>
+    $(document).ready(function () {
+      var currentUser = '{{ request.user.username }}';
+      var roomId = "{{ room_id }}";
+
+      function getMessages() {
+        $.ajax({
+          type: 'GET',
+          url: '/get_messages/' + roomId + '/',
+          success: function (data) {
+            if (data && data.messages.length > 0) {
+              $('#messages').empty();
+              for (var i = data.messages.length - 1; i >= 0; i--) {
+                var messageClass = data.messages[i].sender === currentUser ? 'sent' : 'received';
+                var messageContent = data.messages[i].sender === currentUser ? data.messages[i].content : data.messages[i].content;
+                $('#messages').append('<li class="' + messageClass + '">' + messageContent + '</li>');
+              }
+            } else {
+              console.log('No messages received or invalid data format.');
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error('Error:', status, error);
+          }
+        });
+      }
+      getMessages();
+
+      // Submit message form
+      $('#messageForm').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+          type: 'POST',
+          url: '/save_message/' + roomId + '/',
+          data: $('#messageForm').serialize(),
+          success: function (data) {
+            var messageClass = 'sent';
+            $('#messages').append('<li class="' + messageClass + '">' + data.content + '</li>');
+            $('#messageForm')[0].reset();
+          },
+          error: function (data) {
+            console.log('Error:', data);
+          }
+        });
+      });
+      setInterval(getMessages, 1000);
+    });
+  </script>
+
+<script>
+  $(document).ready(function() {
+    $('.navbar-toggler').click(function() {
+       $('.nav-right').toggle();
+    });
+   });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static "account/css/style.css" %}">
+
+</head>
+
+<body>
+    <div class="container">
+        <input type="checkbox" id="check">
+        <div class="login form">
+            <header>Login</header>
+            {% if messages %}
+            <div class="alert alert-info">
+                {% for message in messages %}
+                <!-- {{ message }} -->
+                <center>
+                 <a  style="font-size: 25px;">{{message}}</a><br><br>
+                </center>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <form action="{% url "login" %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Enter your email" >
+                <input type="password" name="password" placeholder="Enter your password" >
+                <input type="submit" class="button" value="Login">
+            </form>
+        </div>
+    </div>
+    <!-- <a href="#">Forgot password?</a> -->
+    <!-- <div class="signup">
+        <span class="signup">Don't have an account?
+         <label for="check">Signup</label>
+        </span>
+      </div> -->
+</body>
+
+</html>
