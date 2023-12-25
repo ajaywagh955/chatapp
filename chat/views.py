@@ -57,7 +57,7 @@ def save_message(request, room_id):
 @login_required(login_url="login")
 def get_messages(request, room_id):
     room = get_object_or_404(Room, pk=room_id)
-    messages = Message.objects.filter(room=room).order_by('-timestamp')[:10]       
+    messages = Message.objects.filter(room=room).order_by('-timestamp')       
     
     
     if request.user not in room.members.all():
@@ -80,12 +80,14 @@ def get_messages(request, room_id):
 @login_required(login_url="login")
 def chat_room(request, room_id):
     room = get_object_or_404(Room, pk=room_id)
-    messages = Message.objects.filter(room=room).order_by('timestamp')[:10]
+    messages = Message.objects.filter(room=room).order_by('timestamp')
     
     if not  request.user in room.members.all():
         return render(request, 'chat/not_authorized.html')
     
-    return render(request, 'chat/char_room.html', {'room': room, 'messages': messages, 'room_id': room_id})
+    room_name = room.name
+    room_icon = room.room_icon.url if room.room_icon else ''   
+    return render(request, 'chat/chat.html', {'room': room, 'messages': messages, 'room_id': room_id,'room_name':room_name, 'room_icon': room_icon})
 
 
 
