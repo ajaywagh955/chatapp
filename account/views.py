@@ -38,3 +38,6 @@ def UserLogin(request):
     
     return render(request,'account/login.html')
             
+            
+def UserRegister(request):
+    return render(request,'account/register.html')
