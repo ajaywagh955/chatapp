@@ -1,58 +1,72 @@
-<!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zenchat</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Realtime Chat App | CodingNepal</title>
+  <link rel="stylesheet" href="{% static "account/css/style.css" %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
 </head>
+
 <body>
-    <!-- user_rooms.html -->
+  <div class="wrapper">
+    <section class="users">
+      <header>
+        <div class="content">
+          <img src="{{ user_profile_pic }}" alt="">
+          <div class="details">
+            <span>{{request.user}}<span>
+            <p>
+              <?php echo $row['status']; ?>
+            </p>
+          </div>
+        </div>
+        <a href="{% url "logout" %}" class="logout">Logout</a>
+      </header>
+      <div class="search">
+        <span class="text">Select an user to start chat</span>
+        <input type="text" placeholder="Enter name to search...">
+        <button><i class="fas fa-search"></i></button>
+      </div>
+      <div class="users-list">
+        {% for room in rooms %}
+        <a href="{% url "chat_room" room.id %}">
+          <div class="content">
+            <img src="media/{{ room.room_icon }}" alt="Room Icon">
+            <div class="details">
+              <span>{{ room.name }}</span>
+              <p></p>
+            </div>
+          </div>
+          <!-- <div class="status-dot '. $offline .'"><i class="fas fa-circle"></i></div> -->
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
 
 
-{% block content %}
-<div class="room-list-container">
-<h2>Your Rooms</h2>
-<ul class="room-list">
-  {% for room in rooms %}
-    <li><a href="{% url "chat_room" room.id %}">{{ room.name }}</a></li>
-  {% endfor %}
-</ul>
-</div>
-{% endblock %}
+  <script>
+    const searchBar = document.querySelector(".search input"),
+searchIcon = document.querySelector(".search button"),
+usersList = document.querySelector(".users-list");
 
-<style>
-  /* Add these styles to your existing CSS */
-
-.room-list-container {
-  max-width: 600px;
-  margin: 0 auto;
+searchIcon.onclick = ()=>{
+  searchBar.classList.toggle("show");
+  searchIcon.classList.toggle("active");
+  searchBar.focus();
+  if(searchBar.classList.contains("active")){
+    searchBar.value = "";
+    searchBar.classList.remove("active");
+  }
 }
-
-.room-list {
-  list-style-type: none;
-  padding: 0;
-}
-
-.room-list li {
-  margin-bottom: 10px;
-}
-
-.room-list a {
-  display: block;
-  padding: 10px;
-  background-color: #007BFF;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.room-list a:hover {
-  background-color: #0056b3;
-}
-
-</style>
+  </script>
+  
 
 
 </body>
+
 </html>

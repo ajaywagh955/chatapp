@@ -8,6 +8,7 @@ class Room(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(unique=True, blank=True, null=True)
     members = models.ManyToManyField(User, related_name='rooms')
+    room_icon = models.ImageField(upload_to="room_icon/",blank=True,null=True)
     
     def __str__(self):
         return f" Room ID :- {self.id} -- Room Name :- {self.name} ----- Members :- {self.members} "
@@ -31,7 +32,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
     friends = models.ManyToManyField(User, related_name='my_friends', blank=True)
-    # profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     # Add any additional fields you need for the user profile
     
     

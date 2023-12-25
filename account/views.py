@@ -41,3 +41,8 @@ def UserLogin(request):
             
 def UserRegister(request):
     return render(request,'account/register.html')
+
+
+def UseLogout(request):
+    logout(request)
+    return redirect("/")

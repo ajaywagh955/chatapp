@@ -5,13 +5,31 @@ from django.http import HttpResponse,JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
-
+from .models import *
 # Create your views here.
+
+# @login_required(login_url="login")
+# def FirstPage(request):
+#     user_rooms = request.user.rooms.all()
+#     return render(request, 'chat/index.html', {'rooms': user_rooms})
+
 
 @login_required(login_url="login")
 def FirstPage(request):
     user_rooms = request.user.rooms.all()
-    return render(request, 'chat/index.html', {'rooms': user_rooms})
+
+    # Example: Assume you have a field 'icon' in your Room model and 'profile_pic' in your UserProfile model
+    room_icons = [room.room_icon.url if room.room_icon else '' for room in user_rooms]
+    
+    # Assuming UserProfile has a OneToOneField with User
+    user_profile = UserProfile.objects.get(user=request.user)
+    user_profile_pic = user_profile.profile_picture.url if user_profile.profile_picture else ''
+
+    return render(request, 'chat/index.html', {
+        'rooms': user_rooms,
+        'room_icons': room_icons,
+        'user_profile_pic': user_profile_pic,
+    })
 
 
 @csrf_exempt
