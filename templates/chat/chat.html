@@ -53,30 +53,74 @@
 
 -->
 
+<!-- Your existing modal code -->
 
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" style="background-color: #f7f7f7;width:61%;margin-left:70px">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Options</h5> <button type="button" class="btn-close"
-            data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <center>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #f7f7f7; width:61%; margin-left:70px">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Options</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <center>
         <div class="modal-body">
           <center>
-            <p><button class="btn btn-secondary" data-bs-toggle="popover" title="Popover title" data-bs-content="Popover body content is set in this attribute.">Edit</button></p>
-            <p><button class="btn btn-secondary" data-bs-toggle="popover" title="Popover title" data-bs-content="Popover body content is set in this attribute.">Edit</button></p>
-            <!-- <p><button class="btn btn-secondary" data-bs-toggle="popover" title="Popover title" data-bs-content="Popover body content is set in this attribute.">Edit</button></p> -->
-  </center>
+            <p><button class="btn btn-secondary" style="background: #333;color:white" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button></p>
+            <p><button class="btn btn-secondary" style="background: #333;color:white" data-bs-toggle="modal" data-bs-target="#deleteModel">Delete</button></p>
+          </center>
         </div>
       </center>
-        <div class="modal-footer"> 
-          <center>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
+      <div class="modal-footer">
+        <center>
+          <button type="button" class="btn btn-secondary" style="background: #333;color:white" data-bs-dismiss="modal">Close</button>
         </center>
       </div>
     </div>
   </div>
+</div>
+
+<!-- New modal for the edit form -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #f7f7f7; width:71%; margin-left:55px">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Your form goes here -->
+        <form id="editForm">
+          <div class="mb-3">
+            <input type="text" class="form-control" id="editedMessageContent" placeholder="Edit Message">
+          </div>
+          <button type="submit" class="btn" style="background: #333;color:white">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- New modal for the Delete form -->
+
+<div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content"  style="background-color: #f7f7f7; width:71%; margin-left:55px">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Are Your Sure ??</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <center>
+        <button type="submit" class="btn" style="background: #333;color:white">Yes</button><br>
+        <button type="submit" class="btn" style="background: #333;color:white;margin-top:20px">No</button>
+      </center>
+      </div>
+    </div>
+  </div>
+</div>
+
 
   <script src="{% static "chat/js/jquery-3.6.4.min.js" %}"></script>
 
@@ -93,7 +137,11 @@
           success: function (data) {
             if (data && data.messages.length > 0) {
               $('#messages').empty();
-              for (var i = data.messages.length - 1; i >= 0; i--) {
+          //    for (var i = data.messages.length - 1; i >= 0; i--) {
+
+            for (var i = 0; i < data.messages.length; i++) {
+              
+
                 var messageClass = data.messages[i].sender === currentUser ? 'outgoing' : 'incoming';
                 var messageContent = data.messages[i].sender === currentUser ? data.messages[i].content : data.messages[i].content;
                 var messageOptions = '<pre>  </pre><div class="message-options"><i class="fas fa-ellipsis-v" data-bs-toggle="modal"data-bs-target="#exampleModal"></i></div><pre>   </pre>';
