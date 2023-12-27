@@ -290,6 +290,10 @@ body {
   color: #ccc;
 }
 
+.chat{
+  cursor: pointer;
+}
+
 /* Chat Area CSS Start */
 .chat-area header {
   display: flex;
@@ -422,8 +426,21 @@ body {
   pointer-events: auto;
 }
 
+
+.message-options{
+  /* width: 100%; */
+  /* height: 20px; */
+  cursor: pointer;
+}
+
+.message-options .fa-ellipsis-v{
+  width: 10px;
+  height: 33px;
+}
+
 /* Responive media query */
 @media screen and (max-width: 450px) {
+
 
   .form,
   .users {
@@ -502,4 +519,18 @@ body {
   .chat-area form button {
     width: 45px;
   }
+}
+
+
+/* Modals */
+
+
+.modal{
+  box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
+    0 32px 64px -48px rgba(0, 0, 0, 0.5);
+
+}
+
+.modal-content{
+background: #f7f7f7;
 }
