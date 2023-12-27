@@ -57,7 +57,7 @@ def save_message(request, room_id):
 @login_required(login_url="login")
 def get_messages(request, room_id):
     room = get_object_or_404(Room, pk=room_id)
-    messages = Message.objects.filter(room=room).order_by('-timestamp')       
+    messages = Message.objects.filter(room=room).order_by('-id')       
     
     
     if request.user not in room.members.all():

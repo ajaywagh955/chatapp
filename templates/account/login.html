@@ -15,14 +15,12 @@
       <section class="form login">
         <header>Realtime Chat App</header>
         {% if messages %}
-            <div class="alert alert-info">
-                {% for message in messages %}
-                <center style="margin-top: 10px;margin-bottom:-25px">
-                 <a  style="font-size: 25px;">{{message}}</a>
-                </center>
-                {% endfor %}
-            </div>
-            {% endif %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+             {{message}}
+            {% endfor %}
+        </div>
+        {% endif %}
         <form action="{% url "login" %}" method="POST" enctype="multipart/form-data" autocomplete="off">
             {% csrf_token %}
             <div class="error-text"></div>

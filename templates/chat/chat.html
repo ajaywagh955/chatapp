@@ -6,8 +6,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Realtime Chat App | CodingNepal</title>
+  <title>{{ room_name }}</title>
   <link rel="stylesheet" href="{% static "account/css/style.css" %}">
+  <link rel="shortcut icon" href="{{room_icon}}" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
 </head>
 
@@ -37,7 +38,7 @@
 
   <script src="{% static "chat/js/jquery-3.6.4.min.js" %}"></script>
 
-  <script>
+  <!-- <script>
     $(document).ready(function () {
       var currentUser = '{{ request.user.username }}';
       var roomId = "{{ room_id }}";
@@ -82,7 +83,7 @@
           }
         });
       });
-      setInterval(getMessages, 1000);
+      setInterval(getMessages, 100);
     });
   </script>
 
@@ -92,6 +93,105 @@
        $('.nav-right').toggle();
     });
    });
+</script> -->
+
+
+
+<script>
+  $(document).ready(function () {
+    var currentUser = '{{ request.user.username }}';
+    var roomId = "{{ room_id }}";
+
+    function getMessages() {
+      $.ajax({
+          type: 'GET',
+          url: '/get_messages/' + roomId + '/',
+          success: function (data) {
+              if (data && data.messages.length > 0) {
+                  $('#messages').empty();
+                  for (var i = data.messages.length - 1; i >= 0; i--) {
+                      var messageClass = data.messages[i].sender === currentUser ? 'outgoing' : 'incoming';
+                      var messageContent = data.messages[i].sender === currentUser ? data.messages[i].content : data.messages[i].content;
+                      var messageOptions = '<pre>  </pre><div class="message-options"><i class="fas fa-ellipsis-h"></i></div><pre>   </pre>';
+
+                      // Adjust the HTML structure based on the sender
+                      if (data.messages[i].sender === currentUser) {
+                          $('#messages').append('<div class="chat ' + messageClass + '">' +
+                              '<div class="details">' +
+                              messageOptions +
+                              '<p>' + messageContent + '</p>' +
+                              '</div>' +
+                              '</div>' +
+                              '</div>');
+                      } else {
+                          $('#messages').append('<div class="chat ' + messageClass + '">' +
+                              '<div class="details">' +
+                              '<p>' + messageContent + '</p>' +
+                              messageOptions +
+                              '</div>' +
+                              '</div>');
+                      }
+                  }
+              } else {
+                  console.log('No messages received or invalid data format.');
+              }
+          },
+          error: function (xhr, status, error) {
+              console.error('Error:', status, error);
+          }
+      });
+  }
+
+    getMessages();
+
+    // Handle click on message options
+    $(document).on('click', '.message-options', function () {
+        // Implement your additional functions or options here
+        alert('Options clicked!');
+    });
+
+    // Submit message form
+    $('#messageForm').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '/save_message/' + roomId + '/',
+            data: $('#messageForm').serialize(),
+            success: function (data) {
+                var messageClass = 'sent';
+                var messageOptions = '<div class="message-options"><i class="fas fa-ellipsis-h"></i></div>';
+
+                // Append the sent message with options to the #messages container
+                $('#messages').append('<div class="chat ' + messageClass + '">' +
+                    '<div class="details">' +
+                    '<p>' + data.content + '</p>' +
+                    messageOptions +
+                    '</div>' +
+                    '</div>');
+                $('#messageForm')[0].reset();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+    });
+
+    setInterval(getMessages, 100);
+});
+
+</script>
+
+
+<script>
+  $(document).ready(function () {
+      // ...
+
+      // Handle click on message options
+      $(document).on('click', '.message-options', function () {
+          // Implement your additional functions or options here
+          alert('Options clicked!');
+      });
+  });
 </script>
 
 </body>

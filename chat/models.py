@@ -31,6 +31,7 @@ class Message(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
+    mobile_number = models.IntegerField(blank=True)
     friends = models.ManyToManyField(User, related_name='my_friends', blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     # Add any additional fields you need for the user profile
