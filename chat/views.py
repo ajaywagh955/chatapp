@@ -9,7 +9,6 @@ from django.db.models import Q
 from .models import *
 from django.views.decorators.http import require_POST
 from .models import Message
-from .forms import MessageForm
 from django.http import HttpResponseBadRequest
 # Create your views here.
 
@@ -187,32 +186,29 @@ def edit_message(request, message_id):
     
     new_content = request.POST.get('content')
     
-    print(new_content)
-                    
-    if new_content:
-        message.content = new_content
-        message.save()
-            
-        return JsonResponse({'status': 'success', 'message': 'Message updated successfully'})
-    else:
-        return JsonResponse({'status': 'error', 'message': 'New message content is empty'})
-
-        
-            
     
-  
+    if message.sender == request.user:
+        if new_content:
+            message.content = new_content
+            message.save()
+                
+            return JsonResponse({'status': 'success', 'message': 'Message updated successfully'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'New message content is empty'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Unauthorized to edit this message'})
+        
 
-    # # Check if the user trying to edit the message is the original sender
-    # if message.sender == request.user.username:
-    #     new_content = request.POST.get('content', '').strip()
-
-    #     # Check if the new content is not empty
-    #     if new_content:
-    #         message.content = new_content
-    #         message.save()
-
-    #         return JsonResponse({'status': 'success', 'message': 'Message updated successfully'})
-    #     else:
-    #         return JsonResponse({'status': 'error', 'message': 'New message content is empty'})
-    # else:
-    #     return JsonResponse({'status': 'error', 'message': 'Unauthorized to edit this message'})
+@login_required(login_url="login")
+@csrf_exempt
+@require_POST
+def delete_message(request, message_id):
+    try:
+        message = Message.objects.filter(pk=message_id)
+        message.delete()
+        print(message)
+        print("Message Deleted")
+        return JsonResponse({'status': 'success'})
+    except Exception as e:
+        print(e)
+        return JsonResponse({'status': 'error', 'message': str(e)})

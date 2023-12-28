@@ -427,20 +427,11 @@ body{
   .chat-area form input{
     height: 40px;
     width: calc(100% - 48px);
+  }  
+  .main-modal{
+    width: 200px;
   }
-
-
-
-
-  
 }
-
-.main-modal{
-  width:10%;
-  margin-left: 110px;
-
-}
-
 
 
 .alert-info {

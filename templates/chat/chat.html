@@ -1,7 +1,5 @@
 {% load static %}
-
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,13 +8,9 @@
   <link rel="shortcut icon" href="{{room_icon}}" type="image/x-icon">
   <link rel="stylesheet" href="{% static "account/css/style.css" %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-    crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </head>
-
 <body>
   <div class="wrapper">
     <section class="chat-area">
@@ -29,64 +23,75 @@
         </div>
       </header>
 
-
-
-
-      <!-- Modal -->
+      <!-- Main Modal -->
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content main-modal" style="width: 46%;">
+          <div class="modal-content main-modal" style="background: #f7f7f7;">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="exampleModalLabel">Options</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <center>
-                <button type="button" class="btn btn-primary" style="background-color: #333;" data-bs-toggle="modal"
+                <button type="button" class="btn btn-success" data-bs-toggle="modal"
                   data-bs-target="#editMessageModal">Edit</button><br><br>
-                <button type="button" class="btn btn-primary" style="background-color: #333;">Delete</button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                  data-bs-target="#deleteMessageModal">Delete</button><br><br>
               </center>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                style="margin-right:41px;background-color: #fff;color:black">Close</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #333;"s>Close</button>
             </div>
           </div>
         </div>
       </div>
 
-
-
-
-
       <!-- Edit Message Modal -->
-      <div class="modal fade" id="editMessageModal" tabindex="-1" aria-labelledby="editMessageModalLabel" aria-hidden="true">
+      <div class="modal fade" id="editMessageModal" tabindex="-1" aria-labelledby="editMessageModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
+          <div class="modal-content" style="background: #f7f7f7;">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="editMessageModalLabel">Edit Message</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
             </div>
             <div class="modal-body">
               <form id="editMessageForm">
                 {% csrf_token %}
                 <input type="text" id="editedMessage" name="content" class="form-control" placeholder="Edit your message..." autocomplete="off">
-                <input type="hidden" id="editedMessageId">
-                <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                <input type="hidden" id="editedMessageId"><br>
+                <button type="submit" class="btn btn-success">Save Changes</button>
               </form>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Delete Message Modal -->
+      <div class="modal fade" id="deleteMessageModal" tabindex="-1" aria-labelledby="deleteMessageModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="deleteMessageModalLabel">Delete Message</h1>
+              <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete this message?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                data-bs-target="#exampleModal" style="background-color: #333;">Cancel</button>
+              <button type="button" class="btn btn-danger delete-btn" id="confirmDeleteBtn">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-
-
-
-
+      <!-- Message will display here  -->
       <div class="chat-box" id="messages"></div>
 
-
+      <!-- Message Sending form -->
       <form action="" class="typing-area" id="messageForm">
         <input type="text" name="content" class="input-field" placeholder="Type a message here..." autocomplete="off">
         <input type="submit" class="button" value="Send">
@@ -96,10 +101,7 @@
 
 
   <script src="{% static "chat/js/jquery-3.6.4.min.js" %}"></script>
-
-  <!-- <script>
-
-
+  <script>
     $(document).ready(function () {
       var currentUser = '{{ request.user.username }}';
       var roomId = "{{ room_id }}";
@@ -112,34 +114,47 @@
           success: function (data) {
             if (data && data.messages.length > 0) {
               $('#messages').empty();
-              //for (var i = data.messages.length - 1; i >= 0; i--) {
+
               for (var i = 0; i < data.messages.length; i++) {
                 var messageClass = data.messages[i].sender === currentUser ? 'outgoing' : 'incoming';
                 var messageId = data.messages[i].id;
-                var messageContent = data.messages[i].sender === currentUser ? data.messages[i].content : data.messages[i].content;
+                var messageContent = data.messages[i].content;
 
                 if (messageClass === 'outgoing') {
-                  $('#messages').append('<div class="chat ' + messageClass + '" data-bs-toggle="modal"data-bs-target="#exampleModal"><div class="details"><div><i class="fas fa-ellipsis-v out-g"></i></div><p>' + messageContent + '</p></div></div></div>');
+                  $('#messages').append('<div class="chat ' + messageClass + '" data-message-id="' + messageId + '"><div class="details"><div><i class="fas fa-ellipsis-v out-g"></i></div><p>' + messageContent + '</p></div></div></div>');
+                } else {
+                  $('#messages').append('<div class="chat ' + messageClass + '" data-message-id="' + messageId + '"><div class="details"><div><p>' + messageContent + '</p></div><div><i class="fas fa-ellipsis-v inc-m"></i></div></div></div>');
                 }
-                else {
-                  $('#messages').append('<div class="chat ' + messageClass + '" data-bs-toggle="modal"data-bs-target="#exampleModal"><div class="details"><div><p>' + messageContent + '</p></div><div><i class="fas fa-ellipsis-v inc-m"></i></div></div></div>');
-
-                }
-
-      // Add an event listener for the edit button
-      $('.outgoing .fa-ellipsis-v').click(function () {
-        var messageId = $(this).closest('.chat').data('message-id');
-        var messageContent = $(this).closest('.chat').find('p').text();
-      
-        // Set the values in the modal
-        $('#editedMessageId').val(messageId);
-        $('#editedMessage').val(messageContent);
-      
-        // Show the edit message modal
-        $('#editMessageModal').modal('show');
-      });
-
               }
+
+              // event listener for the edit button
+              $('.outgoing, .incoming').click(function (e) {
+                e.stopPropagation();
+
+                var messageId = $(this).closest('.chat').data('message-id');
+                var messageContent = $(this).closest('.chat').find('p').text();
+
+                // Set the values in the modal
+                $('#editedMessageId').val(messageId);
+                $('#editedMessage').val(messageContent);
+
+                // Show the edit message modal
+                $('#exampleModal').modal('show');
+              });
+
+              // Add an event listener for the delete button
+              $('.outgoing, .incoming').click(function (e) {
+                // Prevent the event from propagating to parent elements
+                e.stopPropagation();
+
+                var messageId = $(this).closest('.chat').data('message-id');
+
+                // Set the confirm delete button's data attribute with the message ID
+                $('#confirmDeleteBtn').data('message-id', messageId);
+
+                // Show the delete message modal
+                $('#exampleModal').modal('show');
+              });
             } else {
               console.log('No messages received or invalid data format.');
             }
@@ -150,11 +165,8 @@
         });
       }
 
-
-
       getMessages();
 
-      // Submit message form
       $('#messageForm').submit(function (e) {
         e.preventDefault();
         $.ajax({
@@ -172,158 +184,66 @@
         });
       });
 
+      // event listener for the edit message form
+      $('#editMessageForm').submit(function (e) {
+        e.preventDefault();
 
-      // Add an event listener for the edit message form
-$('#editMessageForm').submit(function (e) {
-  e.preventDefault();
+        var editedMessageId = $('#editedMessageId').val();
+        var editedMessageContent = $('#editedMessage').val();
 
-  var editedMessageId = $('#editedMessageId').val();
-  var editedMessageContent = $('#editedMessage').val();
+        // Perform an AJAX request to update the message on the server
+        $.ajax({
+          type: 'POST',
+          url: '/edit_message/' + editedMessageId + '/', // Update the URL according to your server-side route
+          data: { content: editedMessageContent },
+          success: function (data) {
+            // Update the message in the UI
+            $('[data-message-id="' + editedMessageId + '"] p').text(editedMessageContent);
 
-  // Perform an AJAX request to update the message on the server
-  $.ajax({
-    type: 'POST',
-    url: '/edit_message/' + editedMessageId + '/', // Update the URL according to your server-side route
-    data: { content: editedMessageContent },
-    success: function (data) {
-      // Update the message in the UI
-      $('[data-message-id="' + editedMessageId + '"] p').text(editedMessageContent);
+            // Close the edit message modal
+            $('#editMessageModal').modal('hide');
+          },
+          error: function (xhr) {
+            if (xhr.responseJSON && xhr.responseJSON.status === 'error' && xhr.responseJSON.message) {
+              var errorMessage = xhr.responseJSON.message;
+              alert('Error: ' + errorMessage);  // You can replace this with your preferred way of displaying errors (e.g., show in a modal)
+            } else {
+              console.log('Error:', xhr);
+            }
+          }
+        });
+      });
 
-      // Close the edit message modal
-      $('#editMessageModal').modal('hide');
-    },
-    error: function (data) {
-      console.log('Error:', data);
-    }
-  });
-});
+      // Add an event listener for the delete message form
+      $('#confirmDeleteBtn').click(function () {
+        var messageId = $(this).data('message-id');
 
+        // Perform an AJAX request to delete the message on the server
+        $.ajax({
+          type: 'POST',
+          url: '/delete_message/' + messageId + '/',  // Update the URL according to your server-side route
+          success: function (data) {
+            // Remove the deleted message from the UI
+            $('[data-message-id="' + messageId + '"]').remove();
+
+            // Close the delete message modal
+            $('#deleteMessageModal').modal('hide');
+          },
+          error: function (xhr) {
+            if (xhr.responseJSON && xhr.responseJSON.status === 'error' && xhr.responseJSON.message) {
+              var errorMessage = xhr.responseJSON.message;
+              alert('Error: ' + errorMessage);  // You can replace this with your preferred way of displaying errors (e.g., show in a modal)
+            } else {
+              console.log('Error:', xhr);
+            }
+          }
+        });
+      });
 
       setInterval(getMessages, 1000);
     });
 
-
-    
-
   </script>
-
-
- -->
-
-
-
- <script>
-  $(document).ready(function () {
-    var currentUser = '{{ request.user.username }}';
-    var roomId = "{{ room_id }}";
-    var currentMessageId;
-  
-    function getMessages() {
-      $.ajax({
-        type: 'GET',
-        url: '/get_messages/' + roomId + '/',
-        success: function (data) {
-          if (data && data.messages.length > 0) {
-            $('#messages').empty();
-  
-            for (var i = 0; i < data.messages.length; i++) {
-              var messageClass = data.messages[i].sender === currentUser ? 'outgoing' : 'incoming';
-              var messageId = data.messages[i].id; // assuming each message has a unique ID
-              var messageContent = data.messages[i].content;
-  
-              if (messageClass === 'outgoing') {
-                $('#messages').append('<div class="chat ' + messageClass + '" data-message-id="' + messageId + '"><div class="details"><div><i class="fas fa-ellipsis-v out-g"></i></div><p>' + messageContent + '</p></div></div></div>');
-              } else {
-                $('#messages').append('<div class="chat ' + messageClass + '" data-message-id="' + messageId + '"><div class="details"><div><p>' + messageContent + '</p></div><div><i class="fas fa-ellipsis-v inc-m"></i></div></div></div>');
-              }
-            }
-  
-            // Add an event listener for the edit button
-            $('.outgoing').click(function () {
-              var messageId = $(this).closest('.chat').data('message-id');
-              var messageContent = $(this).closest('.chat').find('p').text();
-
-  
-              // Set the values in the modal
-              $('#editedMessageId').val(messageId);
-              $('#editedMessage').val(messageContent);
-  
-              // Show the edit message modal
-              $('#exampleModal').modal('show');
-            });
-          } else {
-            console.log('No messages received or invalid data format.');
-          }
-        },
-        error: function (xhr, status, error) {
-          console.error('Error:', status, error);
-        }
-      });
-    }
-
-    getMessages();
-  
-    // Submit message form
-    $('#messageForm').submit(function (e) {
-      e.preventDefault();
-      $.ajax({
-        type: 'POST',
-        url: '/save_message/' + roomId + '/',
-        data: $('#messageForm').serialize(),
-        success: function (data) {
-          var messageClass = 'sent';
-          $('#messages').append('<div class="chat ' + messageClass + '"><div class="details"><p>' + data.content + '</p></div></div>');
-          $('#messageForm')[0].reset();
-        },
-        error: function (data) {
-          console.log('Error:', data);
-        }
-      });
-    });
-  
-    // Add an event listener for the edit message form
-    $('#editMessageForm').submit(function (e) {
-      e.preventDefault();
-  
-      var editedMessageId = $('#editedMessageId').val();
-      var editedMessageContent = $('#editedMessage').val();
-  
-      // Perform an AJAX request to update the message on the server
-      $.ajax({
-        type: 'POST',
-        url: '/edit_message/'+ editedMessageId + '/', // Update the URL according to your server-side route
-        data: { content: editedMessageContent },
-        success: function (data) {
-          // Update the message in the UI
-          $('[data-message-id="' + editedMessageId + '"] p').text(editedMessageContent);
-  
-          // Close the edit message modal
-          $('#editMessageModal').modal('hide');
-        },
-        error: function (data) {
-          console.log('Error:', data);
-        }
-      });
-    });
-  
-    // Periodically fetch messages
-    setInterval(getMessages, 1000);
-  
-    // Other existing code...
-  
-  });
-  
- </script>
-
-
-  <script>
-    $(document).ready(function () {
-      $('.navbar-toggler').click(function () {
-        $('.nav-right').toggle();
-      });
-    });
-  </script>
-
 </body>
 
 </html>
