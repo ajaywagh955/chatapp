@@ -12,20 +12,14 @@ from .models import Message
 from django.http import HttpResponseBadRequest
 # Create your views here.
 
-# @login_required(login_url="login")
-# def FirstPage(request):
-#     user_rooms = request.user.rooms.all()
-#     return render(request, 'chat/index.html', {'rooms': user_rooms})
 
 
 @login_required(login_url="login")
 def FirstPage(request):
     user_rooms = request.user.rooms.all()
 
-    # Example: Assume you have a field 'icon' in your Room model and 'profile_pic' in your UserProfile model
     room_icons = [room.room_icon.url if room.room_icon else '' for room in user_rooms]
     
-    # Assuming UserProfile has a OneToOneField with User
     user_profile = UserProfile.objects.get(user=request.user)
     user_profile_pic = user_profile.profile_picture.url if user_profile.profile_picture else ''
 
@@ -61,15 +55,10 @@ def save_message(request, room_id):
 @login_required(login_url="login")
 def get_messages(request, room_id):
     room = get_object_or_404(Room, pk=room_id)
-    messages = Message.objects.filter(room=room).order_by('id')       
-    
+    messages = Message.objects.filter(room=room).order_by('id')   
     
     if request.user not in room.members.all():
-        # Redirect to a "not authorized" page or handle it as needed
         return render(request, 'chat/not_authorized.html')
-    
-    
-
     
     message_list = []
     for message in messages:
@@ -82,9 +71,6 @@ def get_messages(request, room_id):
         message_list.append(message_data)
 
     return JsonResponse({'messages': message_list})
-
-
-
 
 
 @login_required(login_url="login")
@@ -100,11 +86,6 @@ def chat_room(request, room_id):
     return render(request, 'chat/chat.html', {'room': room, 'messages': messages, 'room_id': room_id,'room_name':room_name, 'room_icon': room_icon})
 
 
-
-
-
-
-
 @login_required(login_url="login")
 def send_request(request):
     if request.method == 'POST':
@@ -113,12 +94,10 @@ def send_request(request):
             to_user = User.objects.get(username=username)
             from_user = request.user
 
-            # Check if the request is valid (not to oneself, not already friends)
             if to_user != from_user and not Friendship.objects.filter(from_user=from_user, to_user=to_user, is_accepted=True).exists():
-                # Check if a pending request already exists
+
                 existing_request = Friendship.objects.filter(from_user=from_user, to_user=to_user, is_accepted=False)
                 
-                # Ensure the user is not sending a request to themselves
                 if from_user != to_user:
                     if not existing_request.exists():
                         Friendship.objects.create(from_user=from_user, to_user=to_user)
@@ -140,7 +119,6 @@ def send_request(request):
 def accept_request(request, request_id):
     friendship_request = get_object_or_404(Friendship, id=request_id, to_user=request.user, is_accepted=False)
     
-    # Accept the friend request
     friendship_request.is_accepted = True
     friendship_request.save()
 
@@ -150,7 +128,6 @@ def accept_request(request, request_id):
 def reject_request(request, request_id):
     friendship_request = get_object_or_404(Friendship, id=request_id, to_user=request.user, is_accepted=False)
     
-    # Delete the friend request
     friendship_request.delete()
 
     return redirect('friendship_management')
@@ -180,7 +157,6 @@ def friendship_management(request):
 @csrf_exempt
 @require_POST
 def edit_message(request, message_id):
-    # message = get_object_or_404(Message, pk=message_id)
     
     message = Message.objects.get(id=message_id)
     
