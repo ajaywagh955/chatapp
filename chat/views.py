@@ -65,9 +65,12 @@ def get_messages(request, room_id):
         return render(request, 'chat/not_authorized.html')
     
     
+
+    
     message_list = []
     for message in messages:
         message_data = {
+            'id':message.id,
             'content': message.content,
             'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
             'sender': message.sender.username
