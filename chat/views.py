@@ -3,9 +3,14 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from django.http import HttpResponse,JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.db.models import Q
 from .models import *
+from django.views.decorators.http import require_POST
+from .models import Message
+from .forms import MessageForm
+from django.http import HttpResponseBadRequest
 # Create your views here.
 
 # @login_required(login_url="login")
@@ -78,6 +83,9 @@ def get_messages(request, room_id):
         message_list.append(message_data)
 
     return JsonResponse({'messages': message_list})
+
+
+
 
 
 @login_required(login_url="login")
@@ -165,3 +173,46 @@ def friendship_management(request):
         friends_users.add(friend.to_user)
 
     return render(request, 'chat/friendship/friendship_management.html', {'friends': friends_users,'incoming_requests': incoming_requests},)
+
+
+
+
+@login_required(login_url="login")
+@csrf_exempt
+@require_POST
+def edit_message(request, message_id):
+    # message = get_object_or_404(Message, pk=message_id)
+    
+    message = Message.objects.get(id=message_id)
+    
+    new_content = request.POST.get('content')
+    
+    print(new_content)
+                    
+    if new_content:
+        message.content = new_content
+        message.save()
+            
+        return JsonResponse({'status': 'success', 'message': 'Message updated successfully'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'New message content is empty'})
+
+        
+            
+    
+  
+
+    # # Check if the user trying to edit the message is the original sender
+    # if message.sender == request.user.username:
+    #     new_content = request.POST.get('content', '').strip()
+
+    #     # Check if the new content is not empty
+    #     if new_content:
+    #         message.content = new_content
+    #         message.save()
+
+    #         return JsonResponse({'status': 'success', 'message': 'Message updated successfully'})
+    #     else:
+    #         return JsonResponse({'status': 'error', 'message': 'New message content is empty'})
+    # else:
+    #     return JsonResponse({'status': 'error', 'message': 'Unauthorized to edit this message'})

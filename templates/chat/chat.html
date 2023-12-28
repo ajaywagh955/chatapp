@@ -31,24 +31,19 @@
 
 
 
-      <!-- Button trigger modal -->
-      <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Launch demo modal
-</button> -->
-
-
 
       <!-- Modal -->
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content" style="width: 46%;">
+          <div class="modal-content main-modal" style="width: 46%;">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="exampleModalLabel">Options</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <center>
-                <button type="button" class="btn btn-primary" style="background-color: #333;">Edit</button><br><br>
+                <button type="button" class="btn btn-primary" style="background-color: #333;" data-bs-toggle="modal"
+                  data-bs-target="#editMessageModal">Edit</button><br><br>
                 <button type="button" class="btn btn-primary" style="background-color: #333;">Delete</button>
               </center>
             </div>
@@ -59,6 +54,33 @@
           </div>
         </div>
       </div>
+
+
+
+
+
+      <!-- Edit Message Modal -->
+      <div class="modal fade" id="editMessageModal" tabindex="-1" aria-labelledby="editMessageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="editMessageModalLabel">Edit Message</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="editMessageForm">
+                {% csrf_token %}
+                <input type="text" id="editedMessage" name="content" class="form-control" placeholder="Edit your message..." autocomplete="off">
+                <input type="hidden" id="editedMessageId">
+                <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
 
 
 
@@ -75,12 +97,13 @@
 
   <script src="{% static "chat/js/jquery-3.6.4.min.js" %}"></script>
 
-  <script>
+  <!-- <script>
 
 
     $(document).ready(function () {
       var currentUser = '{{ request.user.username }}';
       var roomId = "{{ room_id }}";
+      var currentMessageId;
 
       function getMessages() {
         $.ajax({
@@ -92,6 +115,7 @@
               //for (var i = data.messages.length - 1; i >= 0; i--) {
               for (var i = 0; i < data.messages.length; i++) {
                 var messageClass = data.messages[i].sender === currentUser ? 'outgoing' : 'incoming';
+                var messageId = data.messages[i].id;
                 var messageContent = data.messages[i].sender === currentUser ? data.messages[i].content : data.messages[i].content;
 
                 if (messageClass === 'outgoing') {
@@ -101,6 +125,19 @@
                   $('#messages').append('<div class="chat ' + messageClass + '" data-bs-toggle="modal"data-bs-target="#exampleModal"><div class="details"><div><p>' + messageContent + '</p></div><div><i class="fas fa-ellipsis-v inc-m"></i></div></div></div>');
 
                 }
+
+      // Add an event listener for the edit button
+      $('.outgoing .fa-ellipsis-v').click(function () {
+        var messageId = $(this).closest('.chat').data('message-id');
+        var messageContent = $(this).closest('.chat').find('p').text();
+      
+        // Set the values in the modal
+        $('#editedMessageId').val(messageId);
+        $('#editedMessage').val(messageContent);
+      
+        // Show the edit message modal
+        $('#editMessageModal').modal('show');
+      });
 
               }
             } else {
@@ -112,6 +149,9 @@
           }
         });
       }
+
+
+
       getMessages();
 
       // Submit message form
@@ -131,15 +171,149 @@
           }
         });
       });
+
+
+      // Add an event listener for the edit message form
+$('#editMessageForm').submit(function (e) {
+  e.preventDefault();
+
+  var editedMessageId = $('#editedMessageId').val();
+  var editedMessageContent = $('#editedMessage').val();
+
+  // Perform an AJAX request to update the message on the server
+  $.ajax({
+    type: 'POST',
+    url: '/edit_message/' + editedMessageId + '/', // Update the URL according to your server-side route
+    data: { content: editedMessageContent },
+    success: function (data) {
+      // Update the message in the UI
+      $('[data-message-id="' + editedMessageId + '"] p').text(editedMessageContent);
+
+      // Close the edit message modal
+      $('#editMessageModal').modal('hide');
+    },
+    error: function (data) {
+      console.log('Error:', data);
+    }
+  });
+});
+
+
       setInterval(getMessages, 1000);
     });
 
 
+    
+
   </script>
 
 
+ -->
 
 
+
+ <script>
+  $(document).ready(function () {
+    var currentUser = '{{ request.user.username }}';
+    var roomId = "{{ room_id }}";
+    var currentMessageId;
+  
+    function getMessages() {
+      $.ajax({
+        type: 'GET',
+        url: '/get_messages/' + roomId + '/',
+        success: function (data) {
+          if (data && data.messages.length > 0) {
+            $('#messages').empty();
+  
+            for (var i = 0; i < data.messages.length; i++) {
+              var messageClass = data.messages[i].sender === currentUser ? 'outgoing' : 'incoming';
+              var messageId = data.messages[i].id; // assuming each message has a unique ID
+              var messageContent = data.messages[i].content;
+  
+              if (messageClass === 'outgoing') {
+                $('#messages').append('<div class="chat ' + messageClass + '" data-message-id="' + messageId + '"><div class="details"><div><i class="fas fa-ellipsis-v out-g"></i></div><p>' + messageContent + '</p></div></div></div>');
+              } else {
+                $('#messages').append('<div class="chat ' + messageClass + '" data-message-id="' + messageId + '"><div class="details"><div><p>' + messageContent + '</p></div><div><i class="fas fa-ellipsis-v inc-m"></i></div></div></div>');
+              }
+            }
+  
+            // Add an event listener for the edit button
+            $('.outgoing').click(function () {
+              var messageId = $(this).closest('.chat').data('message-id');
+              var messageContent = $(this).closest('.chat').find('p').text();
+
+  
+              // Set the values in the modal
+              $('#editedMessageId').val(messageId);
+              $('#editedMessage').val(messageContent);
+  
+              // Show the edit message modal
+              $('#exampleModal').modal('show');
+            });
+          } else {
+            console.log('No messages received or invalid data format.');
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error('Error:', status, error);
+        }
+      });
+    }
+
+    getMessages();
+  
+    // Submit message form
+    $('#messageForm').submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: '/save_message/' + roomId + '/',
+        data: $('#messageForm').serialize(),
+        success: function (data) {
+          var messageClass = 'sent';
+          $('#messages').append('<div class="chat ' + messageClass + '"><div class="details"><p>' + data.content + '</p></div></div>');
+          $('#messageForm')[0].reset();
+        },
+        error: function (data) {
+          console.log('Error:', data);
+        }
+      });
+    });
+  
+    // Add an event listener for the edit message form
+    $('#editMessageForm').submit(function (e) {
+      e.preventDefault();
+  
+      var editedMessageId = $('#editedMessageId').val();
+      var editedMessageContent = $('#editedMessage').val();
+  
+      // Perform an AJAX request to update the message on the server
+      $.ajax({
+        type: 'POST',
+        url: '/edit_message/'+ editedMessageId + '/', // Update the URL according to your server-side route
+        data: { content: editedMessageContent },
+        success: function (data) {
+          // Update the message in the UI
+          $('[data-message-id="' + editedMessageId + '"] p').text(editedMessageContent);
+  
+          // Close the edit message modal
+          $('#editMessageModal').modal('hide');
+        },
+        error: function (data) {
+          console.log('Error:', data);
+        }
+      });
+    });
+  
+    // Periodically fetch messages
+    setInterval(getMessages, 1000);
+  
+    // Other existing code...
+  
+  });
+  
+ </script>
 
 
   <script>
