@@ -82,3 +82,5 @@ def UserRegister(request):
 def UseLogout(request):
     logout(request)
     return redirect("/")
+
+

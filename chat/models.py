@@ -34,8 +34,8 @@ class UserProfile(models.Model):
     mobile_number = models.IntegerField(blank=True)
     friends = models.ManyToManyField(User, related_name='my_friends', blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
-    # Add any additional fields you need for the user profile
-    
+    is_online = models.BooleanField(default=False)
+    is_typing = models.BooleanField(default=False)
     
     def __str__(self):
         return f"User Name :- {self.user}"

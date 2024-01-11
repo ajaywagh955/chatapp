@@ -17,6 +17,13 @@ urlpatterns = [
     path('accept_request/<int:request_id>/', accept_request, name='accept_request'),
     path('reject_request/<int:request_id>/', reject_request, name='reject_request'),   
     path('fr/friendship_management/', friendship_management, name='friendship_management'),
+    
+    
+    # User Presence and is typing urls
+    
+    path('check_user_presence/<str:room_id>/', check_user_presence, name='check_user_presence'),
+    path('set_user_typing/<str:room_id>/', set_user_typing, name='set_user_typing'),
+    path('check_user_typing/<str:room_id>/', check_user_typing, name='check_user_typing'),
 ]
 
 

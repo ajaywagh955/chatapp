@@ -188,3 +188,42 @@ def delete_message(request, message_id):
     except Exception as e:
         print(e)
         return JsonResponse({'status': 'error', 'message': str(e)})
+    
+    
+    
+# User Presend and Is Typing logical Views
+
+
+
+@require_POST
+@csrf_exempt
+@login_required(login_url="login")
+def check_user_presence(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    user_last_activity_key = f'user_last_activity_{request.user.id}_room_{room_id}'
+    last_activity_time = request.session.get(user_last_activity_key)
+
+    if last_activity_time:
+        # Check if the user was active in the last 5 minutes
+        is_online = datetime.now() - last_activity_time < timedelta(minutes=5)
+    else:
+        is_online = False
+
+    return JsonResponse({'is_online': is_online})
+
+@csrf_exempt
+@require_POST
+@login_required
+def set_user_typing(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    room.members.add(request.user)
+    return JsonResponse({'status': 'success'})
+
+
+@csrf_exempt
+@require_POST
+@login_required
+def check_user_typing(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    is_typing = room.members.filter(Q(id=request.user.id) & Q(is_typing=True)).exists()
+    return JsonResponse({'is_typing': is_typing})
