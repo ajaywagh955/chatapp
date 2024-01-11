@@ -210,20 +210,3 @@ def check_user_presence(request, room_id):
         is_online = False
 
     return JsonResponse({'is_online': is_online})
-
-@csrf_exempt
-@require_POST
-@login_required
-def set_user_typing(request, room_id):
-    room = get_object_or_404(Room, id=room_id)
-    room.members.add(request.user)
-    return JsonResponse({'status': 'success'})
-
-
-@csrf_exempt
-@require_POST
-@login_required
-def check_user_typing(request, room_id):
-    room = get_object_or_404(Room, id=room_id)
-    is_typing = room.members.filter(Q(id=request.user.id) & Q(is_typing=True)).exists()
-    return JsonResponse({'is_typing': is_typing})

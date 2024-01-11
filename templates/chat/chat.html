@@ -245,61 +245,6 @@
 
   </script>
 
-  <script>
-    var currentUser = '{{ request.user.username }}';
-    var roomId = "{{ room_id }}";
-  
-    $(document).ready(function () {
-      // User Presence
-  
-      function checkUserPresence() {
-        $.post(`{% url 'check_user_presence' room.id %}`, function (data) {
-          if (data.is_online) {
-            // Update UI to indicate online status if needed
-            console.log("User is Online");
-            $('#userStatus').text('Online');
-          } else {
-            // Update UI to indicate offline status if needed
-            console.log("User is offline");
-          }
-        });
-      }
-  
-      function setUserTyping() {
-        $.post(`{% url 'set_user_typing' room.id %}`, function (data) {
-          // Handle success if needed
-        });
-      }
-  
-      function checkUserTyping() {
-        $.post(`{% url 'check_user_typing' room.id %}`, function (data) {
-          if (data.is_typing) {
-            // Update UI to indicate typing status if needed
-            console.log("User is typing");
-            $('#typingIndicator').text('User is typing...');
-          } else {
-            // Update UI to indicate not typing status if needed
-            console.log("User is not typing");
-            $('#typingIndicator').text('');
-          }
-        });
-      }
-  
-      checkUserPresence();
-      setInterval(checkUserPresence, 5000);
-  
-      $('#messageInput').on('input', function () {
-        setUserTyping();
-      });
-  
-      setInterval(checkUserTyping, 2000);
-  
-    });
-  </script>
-  
-  
-
-
 
 </body>
 
